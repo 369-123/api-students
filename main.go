@@ -10,52 +10,55 @@ import (
 )
 
 func main() {
-  // Echo instance
-  e := echo.New()
+	// Echo instance
+	e := echo.New()
 
-  // Middleware
-  e.Use(middleware.Logger())
-  e.Use(middleware.Recover())
- 
-  // Routes
-  e.GET("/students", getStudents)
-  e.POST("/students", createStudents)
-  e.GET("/students/:id", getStudent)
-  e.PUT("/students/:id", updateStudent)
-  e.DELETE("/students/:id", deleteStudent)
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-  // Start server
-  e.Logger.Fatal(e.Start(":8080"))
+	// Routes
+	e.GET("/students", getStudents)
+	e.POST("/students", createStudents)
+	e.GET("/students/:id", getStudent)
+	e.PUT("/students/:id", updateStudent)
+	e.DELETE("/students/:id", deleteStudent)
+
+	// Start server
+	e.Logger.Fatal(e.Start(":8080"))
 }
 
 // Handler
 func getStudents(c echo.Context) error {
-  return c.String(http.StatusOK, "List of all students")
+	return c.String(http.StatusOK, "List of all students")
 }
 
 func createStudents(c echo.Context) error {
-  student := db.Student{}
-  if err := c.Bind(&student); err != nil{
-      return err
+	student := db.Student{}
+	if err := c.Bind(&student); err != nil {
+		return err
+	}
+  
+	if err := db.AddStudent(student); err != nil {
+    return c.String(http.StatusInternalServerError, "Error to create student")
   }
-  db.AddStudent(student)
-  return c.String(http.StatusOK, "create student")
+	return c.String(http.StatusOK, "create student")
 }
 
 func getStudent(c echo.Context) error {
-  id := c.Param("id")
-   getStud := fmt.Sprintf("Get %s student", id)
-  return c.String(http.StatusOK, getStud)
+	id := c.Param("id")
+	getStud := fmt.Sprintf("Get %s student", id)
+	return c.String(http.StatusOK, getStud)
 }
 
 func updateStudent(c echo.Context) error {
-  id := c.Param("id")
-   updateStud := fmt.Sprintf("Get %s student", id)
-  return c.String(http.StatusOK, updateStud)
+	id := c.Param("id")
+	updateStud := fmt.Sprintf("Get %s student", id)
+	return c.String(http.StatusOK, updateStud)
 }
 
 func deleteStudent(c echo.Context) error {
-  id := c.Param("id") 
-   deleteStud := fmt.Sprintf("Get %s student", id)
-  return c.String(http.StatusOK, deleteStud)
+	id := c.Param("id")
+	deleteStud := fmt.Sprintf("Get %s student", id)
+	return c.String(http.StatusOK, deleteStud)
 }
