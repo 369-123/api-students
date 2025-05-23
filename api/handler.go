@@ -2,12 +2,12 @@ package api
 
 import (
 	"errors"
-	//"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/369-123/api-students/schemas"
 	"github.com/labstack/echo/v4"
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
@@ -22,9 +22,22 @@ func (api *API) getStudents(c echo.Context) error {
 }
 
 func (api *API) createStudents(c echo.Context) error {
-	student := schemas.Student{}
-	if err := c.Bind(&student); err != nil {
+	studentReq := StudentRequest{}
+	if err := c.Bind(&studentReq); err != nil {
 		return err
+	}
+
+	if err := studentReq.Validate(); err != nil {
+		log.Error().Err(err).Msgf("[api] error validating struct")
+		return c.String(http.StatusBadRequest, "Error validating student")
+	}
+
+	student := schemas.Student{
+		Name:   studentReq.Name,
+		Email:  studentReq.Email,
+		CPF:    studentReq.CPF,
+		Age:    studentReq.Age,
+		Active: *studentReq.Active,
 	}
 
 	if err := api.DB.AddStudent(student); err != nil {
@@ -52,7 +65,7 @@ func (api *API) getStudent(c echo.Context) error {
 }
 
 func (api *API) updateStudent(c echo.Context) error {
-		id, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "faleid to get student ID")
 	}
@@ -77,11 +90,10 @@ func (api *API) updateStudent(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "failed to save student")
 	}
 
-	
 	return c.JSON(http.StatusOK, student)
 }
 
-func updateStudentInfo(receivedStudent, student schemas.Student) schemas.Student {	
+func updateStudentInfo(receivedStudent, student schemas.Student) schemas.Student {
 	if receivedStudent.Name != "" {
 		student.Name = receivedStudent.Name
 	}
@@ -94,7 +106,7 @@ func updateStudentInfo(receivedStudent, student schemas.Student) schemas.Student
 		student.Email = receivedStudent.Email
 	}
 
-	if receivedStudent.Age > 0  {
+	if receivedStudent.Age > 0 {
 		student.Age = receivedStudent.Age
 	}
 
@@ -106,7 +118,7 @@ func updateStudentInfo(receivedStudent, student schemas.Student) schemas.Student
 }
 
 func (api *API) deleteStudent(c echo.Context) error {
-		id, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "faleid to get student ID")
 	}
@@ -124,7 +136,5 @@ func (api *API) deleteStudent(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "failed to delete student")
 	}
 
-	
 	return c.JSON(http.StatusOK, student)
 }
-

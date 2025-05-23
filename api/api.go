@@ -29,7 +29,7 @@ func NewServer() *API {
 	}
 }
 
-func (api *API)ConfigureRoutes() {
+func (api *API) ConfigureRoutes() {
 	//routes
 	api.Echo.GET("/students", api.getStudents)
 	api.Echo.POST("/students", api.createStudents)
@@ -40,6 +40,6 @@ func (api *API)ConfigureRoutes() {
 
 func (api *API) Start() error {
 	// Start server
- return api.Echo.Start(":8080")
+	return api.Echo.Start(":8080")
 
 }

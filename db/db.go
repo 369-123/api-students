@@ -10,7 +10,7 @@ import (
 )
 
 type StudentHandler struct {
-	DB * gorm.DB
+	DB *gorm.DB
 }
 
 func Init() *gorm.DB {
@@ -36,7 +36,7 @@ func (s *StudentHandler) AddStudent(student schemas.Student) error {
 		return result.Error
 	}
 
-	 log.Info().Msg("Create student!")
+	log.Info().Msg("Create student!")
 	return nil
 }
 
@@ -50,16 +50,16 @@ func (s *StudentHandler) GetStudents() ([]schemas.Student, error) {
 func (s *StudentHandler) GetStudent(id int) (schemas.Student, error) {
 	var student schemas.Student
 	err := s.DB.First(&student, id)
-	
+
 	return student, err.Error
 }
 
 func (s *StudentHandler) UpdateStudent(updateStudent schemas.Student) error {
-	
+
 	return s.DB.Save(&updateStudent).Error
 }
 
 func (s *StudentHandler) DeleteStudent(student schemas.Student) error {
-	
+
 	return s.DB.Delete(&student).Error
 }
