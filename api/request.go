@@ -6,7 +6,7 @@ import (
 
 type StudentRequest struct {
 	Name   string `json:"name"`
-	CPF    int    `json:"cpf"`
+	CPF    string `json:"cpf"`
 	Email  string `json:"email"`
 	Age    int    `json:"age"`
 	Active *bool  `json:"active"` // using bool as a pointer to force true/false input
@@ -25,11 +25,11 @@ func (s *StudentRequest) Validate() error {
 		return errParamRequired("email", "string")
 	}
 
-	if s.CPF > 0 {
-		return errParamRequired("cpf", "int")
+	if s.CPF == "" {
+		return errParamRequired("cpf", "string")
 	}
 
-	if s.Age > 0 {
+	if s.Age <= 0 {
 		return errParamRequired("age", "int")
 	}
 

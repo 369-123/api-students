@@ -9,6 +9,7 @@ Routes:
 - GET /students/:id: - Get infos from a specific students
 - PUT /students/:id - Update student
 - DELETE /students/:id - Delete student
+- GET /students - list all active students
 
 struct Student:
 

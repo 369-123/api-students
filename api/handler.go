@@ -93,12 +93,24 @@ func (api *API) updateStudent(c echo.Context) error {
 	return c.JSON(http.StatusOK, student)
 }
 
+// getStudents godoc
+//
+// @Sumarry  		Get a list of students
+// @Description		Retrieve students details
+// @Tags			students
+// @Accept			json
+// @Produce			json
+// @Param			register path 	int   false     "registration"
+// @Success			200 {object} schemas.StudentResponse
+// @Failure			404
+// @Router 			/students [put]
+
 func updateStudentInfo(receivedStudent, student schemas.Student) schemas.Student {
 	if receivedStudent.Name != "" {
 		student.Name = receivedStudent.Name
 	}
 
-	if receivedStudent.CPF > 0 {
+	if receivedStudent.CPF != "" {
 		student.CPF = receivedStudent.CPF
 	}
 
