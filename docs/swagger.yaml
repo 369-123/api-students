@@ -1,0 +1,183 @@
+definitions:
+  api.StudentRequest:
+    properties:
+      active:
+        description: using bool as a pointer to force true/false input
+        type: boolean
+      age:
+        type: integer
+      cpf:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  schemas.Student:
+    type: object
+  schemas.StudentResponse:
+    properties:
+      age:
+        type: integer
+      cpf:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      registration:
+        type: boolean
+      updateAt:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /students:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all student records
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/schemas.StudentResponse'
+            type: array
+        "404":
+          description: not found
+          schema:
+            type: string
+      summary: Get all students
+      tags:
+      - students
+    post:
+      consumes:
+      - application/json
+      description: Create a new student record
+      parameters:
+      - description: Student info
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/api.StudentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: create student
+          schema:
+            type: string
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "500":
+          description: internal error
+          schema:
+            type: string
+      summary: Create a new student
+      tags:
+      - students
+  /students/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a student by ID
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Student'
+        "404":
+          description: student not found
+          schema:
+            type: string
+        "500":
+          description: internal error
+          schema:
+            type: string
+      summary: Delete a student
+      tags:
+      - students
+    get:
+      consumes:
+      - application/json
+      description: Get a single student record by ID
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.StudentResponse'
+        "404":
+          description: student not found
+          schema:
+            type: string
+        "500":
+          description: internal error
+          schema:
+            type: string
+      summary: Get student by ID
+      tags:
+      - students
+    put:
+      consumes:
+      - application/json
+      description: Update a student's details by ID
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Student data to update
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.Student'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Student'
+        "404":
+          description: student not found
+          schema:
+            type: string
+        "500":
+          description: internal error
+          schema:
+            type: string
+      summary: Update a student
+      tags:
+      - students
+swagger: "2.0"

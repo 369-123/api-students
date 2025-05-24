@@ -5,6 +5,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
+	_"github.com/369-123/api-students/docs"
 )
 
 type API struct {
@@ -36,6 +38,7 @@ func (api *API) ConfigureRoutes() {
 	api.Echo.GET("/students/:id", api.getStudent)
 	api.Echo.PUT("/students/:id", api.updateStudent)
 	api.Echo.DELETE("/students/:id", api.deleteStudent)
+	api.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 }
 
 func (api *API) Start() error {
